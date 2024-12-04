@@ -33,13 +33,11 @@ def search_xmas(i, j, s):
     if i - 3 >= 0 and j + 4 <= c and ''.join(s[i-k, j+k] for k in range(1, 4)) == "MAS":
         count += 1 
     return count    
+
 count = 0
 for i in range(len(s)):
     for j in range(len(s[0])):
         if s[i, j] == "X":
             count += search_xmas(i, j, s)
 print(count)
-
-
-
 
