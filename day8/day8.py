@@ -54,12 +54,8 @@ antinodes_part2 = set()
 for _, v in d.items():
     antenna_pair_locs = select_two_combination(v)
     for antenna_pair_loc in antenna_pair_locs:
-        antinodes1 = get_antinode_loc_part1(antenna_pair_loc, boundary_x, boundary_y)
-        antinodes2 = get_antinode_loc_part2(antenna_pair_loc, boundary_x, boundary_y)
-        for antinode in antinodes1:
-            antinodes_part1.add(antinode)
-        for antinode in antinodes2:
-            antinodes_part2.add(antinode)
+        for antinode_func, antinodes in [(get_antinode_loc_part1, antinodes_part1), (get_antinode_loc_part2, antinodes_part2)]:
+            antinodes.update(antinode_func(antenna_pair_loc, boundary_x, boundary_y))
 
 count1 = len(antinodes_part1)
 count2 = len(antinodes_part2)
