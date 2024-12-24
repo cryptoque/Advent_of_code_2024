@@ -40,7 +40,7 @@ def op(operator, x, y):
     elif operator == "OR":
         return x or y
 
-def apply_op(eq, inputs, target, trace):
+def apply_op(eq, inputs, target):
     r = eq[target]
 
     operator, x, y = list(r.keys())[0], list(r.values())[0][0], list(r.values())[0][1]
@@ -51,39 +51,18 @@ def apply_op(eq, inputs, target, trace):
         
     elif (x.startswith("x") or x.startswith("y")):
         x = inputs[x]
-        y, _ = apply_op(eq, inputs, y, trace)
+        y, _ = apply_op(eq, inputs, y)
     elif (y.startswith("x") or y.startswith("y")):
         y = inputs[y]
-        x, _ = apply_op(eq, inputs, x, trace)
+        x, _ = apply_op(eq, inputs, x)
     else:
-        x, _ = apply_op(eq, inputs, x, trace)
-        y, _ = apply_op(eq, inputs, y, trace)
+        x, _ = apply_op(eq, inputs, x)
+        y, _ = apply_op(eq, inputs, y)
     return op(operator, x, y), trace
 
 inputs, eqs, ands, xors, ands_extended, ors_extended = parse_input()
 xors = dict(sorted(xors.items(), key=lambda item: item[0], reverse=False))
 
-out = {}
-for k, v in eqs.items():
-    if k.startswith("z"):
-        out[k], trace = apply_op(eqs, inputs, k, [])
-
-xs = {}
-ys = {}
-
-for k, v in inputs.items():
-    if k.startswith("x"):
-        xs[k] = v
-    else:
-        ys[k] = v
-xs = dict(sorted(xs.items(), key=lambda item: item[0], reverse=True))
-ys = dict(sorted(ys.items(), key=lambda item: item[0], reverse=True))
-
-x = list(xs.values())
-y = list(ys.values())
-
-real_s = reversed(list(bin(int("".join(map(str, x)), 2) + int("".join(map(str, y)), 2))[2:]))
-real_s = list(map(int, real_s))
 
 calculated_final = {}
 for k,v in xors.items():
