@@ -1,16 +1,11 @@
 def parse_input():
-    inputs = {}
     eq = {}
     ands = {}
-    ors_extended = {}
     xors = {}
+    ors_extended = {}
     ands_extended = {}
     with open("input.txt", "r") as f:
-        x, y = f.read().split("\n\n")
-        x = x.split("\n")
-        for e in x:
-            x1 = e.split(": ")
-            inputs[x1[0]] = int(x1[1])
+        _, y = f.read().split("\n\n")
         y = y.split("\n")
         for e in y:
             left, right = e.split(" -> ")
@@ -29,47 +24,16 @@ def parse_input():
                 
                     
     xors = dict(sorted(xors.items(), key=lambda item: item[0], reverse=False))
-    ands = dict(sorted(ands.items(), key=lambda item: item[0], reverse=False))
-    return inputs, eq, ands, xors, ands_extended, ors_extended
+    return eq, ands, xors, ands_extended, ors_extended
 
-def op(operator, x, y):
-    if operator == "XOR":
-        return x^y
-    elif operator == "AND":
-        return x and y
-    elif operator == "OR":
-        return x or y
+eqs, ands, xors, ands_extended, ors_extended = parse_input()
+store_calculated = {}
 
-def apply_op(eq, inputs, target):
-    r = eq[target]
-
-    operator, x, y = list(r.keys())[0], list(r.values())[0][0], list(r.values())[0][1]
-    if (x.startswith("x") or x.startswith("y")) and (y.startswith("x") or y.startswith("y")):
-        #trace.append([target, operator, x, y])
-        x = inputs[x]
-        y = inputs[y]
-        
-    elif (x.startswith("x") or x.startswith("y")):
-        x = inputs[x]
-        y, _ = apply_op(eq, inputs, y)
-    elif (y.startswith("x") or y.startswith("y")):
-        y = inputs[y]
-        x, _ = apply_op(eq, inputs, x)
-    else:
-        x, _ = apply_op(eq, inputs, x)
-        y, _ = apply_op(eq, inputs, y)
-    return op(operator, x, y), trace
-
-inputs, eqs, ands, xors, ands_extended, ors_extended = parse_input()
-xors = dict(sorted(xors.items(), key=lambda item: item[0], reverse=False))
-
-
-calculated_final = {}
 for k,v in xors.items():
     if k == 0:
         continue
-    if k-1 in calculated_final.keys():
-        bfd_and_mrk =tuple(calculated_final[k-1])
+    if k-1 in store_calculated.keys():
+        bfd_and_mrk =tuple(store_calculated[k-1])
     else:
         z = list(eqs["z" + str(k-1).zfill(2)].values())[0]
         bfd_and_mrk = tuple(sorted((z[0], z[1])))
@@ -85,10 +49,10 @@ for k,v in xors.items():
         print("***", k, sfw, v)
         continue
     calculated = sorted((v, qkc))
-    calculated_final[k] = calculated
+    store_calculated[k] = calculated
     reality = sorted(list(eqs["z"+str(k).zfill(2)].values())[0])
     if calculated!=reality:
-        print("*** problems at: ", k)
+        print("*** diffs at: ", k)
         print(calculated, reality)
     else:
         print(calculated, reality)
@@ -143,7 +107,7 @@ for k,v in xors.items():
 #['ctm', 'dmn'] ['ctm', 'dmn']
         
 # "qsb" <->"z39", "gvm" <->"z26", "wmp" <-> "z17", "qjj" <-> "gjc"
-# swap those and rerun the script the problems will go away
+# swap those and rerun the script the diffs will go away
 result2 = ["qsb","z39", "gvm", "z26", "wmp", "z17", "qjj", "gjc"]
 result2 = ",".join(sorted(result2))
 print(result2)
