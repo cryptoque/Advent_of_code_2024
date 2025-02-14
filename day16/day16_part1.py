@@ -50,9 +50,6 @@ def a_algo_with_obstables(maze, start, end):
                     f_score = tentative_g + heuristic((nx, ny), end)
                     heapq.heappush(open_set, (f_score, tentative_g, nx, ny, i))
                     came_from[(nx, ny)] = (x, y)
-            
-            #print(g_score)
-            #print("*********")
 
     return None, None
     

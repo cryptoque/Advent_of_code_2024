@@ -1,4 +1,5 @@
 import heapq
+import time
 
 def parse_input():
     start = ()
@@ -41,7 +42,7 @@ def dijkstra_all_paths(maze, start, end):
             neighbor = (nx, ny)
             if 0 <= nx < r and 0 <= ny < c and maze[nx][ny] != "#":
                 tentative_g = current_dist + 1
-                if neighbor not in g_score or tentative_g < g_score[neighbor]:
+                if neighbor not in g_score or tentative_g <= g_score[neighbor]:
                     g_score[neighbor] = tentative_g
                     heapq.heappush(pq, (tentative_g, neighbor, path + [neighbor]))
                 elif tentative_g == g_score[neighbor]:
@@ -64,9 +65,16 @@ map, start, end = parse_input()
 routes = dijkstra_all_paths(map, start, end)[0]
 
 # part 1
+s1 = time.time()
 print(cheat(routes, 2))
+e1 = time.time()
+print("part1: ", e1-s1)
 # part 2
+s2= time.time()
 print(cheat(routes, 20))
+e2 = time.time()
+print("part2: ", e2-s2)
+
 
     
     
